@@ -332,6 +332,7 @@ def load_libnss():
             "/usr/local/opt/nss/lib",  # nss installed with Brew on Darwin
             "/opt/homebrew/lib", # nss installed with Brew on Darwin/Apple Silicon
             "/opt/pkg/lib/nss",  # installed via pkgsrc
+            "/snap/firefox/current/usr/lib/firefox",  # Snap
             "/Applications/Firefox.app/Contents/MacOS",  # default manual install location
             "/Applications/Thunderbird.app/Contents/MacOS",
             "/Applications/SeaMonkey.app/Contents/MacOS",
@@ -484,7 +485,8 @@ class NSSProxy:
             if self._PK11_NeedLogin(keyslot):
                 password: str = ask_password(profile, interactive)
 
-                LOG.debug("Authenticating with password '%s'", password)
+                LOG.debug("Authenticating with password '%s%s'",
+                    password[:2], '*' * (len(password) - 2))
                 err_status: int = self._PK11_CheckUserPassword(keyslot, password)
 
                 LOG.debug("Checking user password returned %s", err_status)
